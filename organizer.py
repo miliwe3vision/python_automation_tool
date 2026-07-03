@@ -62,26 +62,30 @@ def organize_files(folder_path):
         "Others": 0
     }
 
-    files = os.listdir(folder_path)
+    # Get only files (ignore folders)
+    files = [
+    file for file in os.listdir(folder_path)
+    if os.path.isfile(os.path.join(folder_path, file))
+    ]
 
     if len(files) == 0:
-        print("\nFolder is Empty.")
+        print("\nNo files found to organize.")
+        print("All files are already organized.")
         return
 
     print("\nOrganizing Files...\n")
 
     for file in files:
 
-        source_path = os.path.join(folder_path, file)
-
-        # Skip folders
-        if os.path.isdir(source_path):
+        # Ignore hidden files like .DS_Store
+        if file.startswith("."):
             continue
+
+        source_path = os.path.join(folder_path, file)
 
         extension = os.path.splitext(file)[1].lower()
 
         moved = False
-
         # Search category
         for category, extensions in FILE_TYPES.items():
 
@@ -137,3 +141,14 @@ def organize_files(folder_path):
         print(f"{category:<12}: {count}")
 
     print("=" * 40)
+    
+    for file in files:
+    
+        # Ignore hidden files
+        if file.startswith("."):
+            continue
+
+        source_path = os.path.join(folder_path, file)
+
+        if os.path.isdir(source_path):
+            continue
